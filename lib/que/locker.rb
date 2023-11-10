@@ -21,14 +21,14 @@ module Que
 
   SQL[:clean_lockers] =
     %{
-      DELETE FROM public.que_lockers
+      DELETE FROM que_lockers
       WHERE pid = pg_backend_pid()
-      OR NOT EXISTS (SELECT 1 FROM pg_stat_activity WHERE pid = public.que_lockers.pid)
+      OR NOT EXISTS (SELECT 1 FROM pg_stat_activity WHERE pid = que_lockers.pid)
     }
 
   SQL[:register_locker] =
     %{
-      INSERT INTO public.que_lockers (pid, worker_count, worker_priorities, ruby_pid, ruby_hostname, listening, queues, job_schema_version)
+      INSERT INTO que_lockers (pid, worker_count, worker_priorities, ruby_pid, ruby_hostname, listening, queues, job_schema_version)
       VALUES (pg_backend_pid(), $1::integer, $2::integer[], $3::integer, $4::text, $5::boolean, $6::text[], $7::integer)
     }
 
@@ -456,7 +456,7 @@ module Que
         connection.execute(
           <<-SQL
             SELECT id
-            FROM public.que_jobs
+            FROM que_jobs
             WHERE finished_at IS NULL
               AND expired_at IS NULL
               AND id IN (#{ids.join(', ')})

@@ -11,7 +11,7 @@ module Que
 
     SQL[:insert_job] =
       %{
-        INSERT INTO public.que_jobs
+        INSERT INTO que_jobs
         (queue, priority, run_at, job_class, args, kwargs, data, job_schema_version)
         VALUES
         (
@@ -32,7 +32,7 @@ module Que
         WITH args_and_kwargs as (
           SELECT * from json_to_recordset(coalesce($5, '[{args:{},kwargs:{}}]')::json) as x(args jsonb, kwargs jsonb)
         )
-        INSERT INTO public.que_jobs
+        INSERT INTO que_jobs
         (queue, priority, run_at, job_class, args, kwargs, data, job_schema_version)
         SELECT
           coalesce($1, 'default')::text,

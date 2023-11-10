@@ -14,7 +14,7 @@ module Que
     # example, the following might lock more than five jobs during execution:
     #
     #   SELECT (j).*, pg_try_advisory_lock((j).id) AS locked
-    #   FROM public.que_jobs AS j
+    #   FROM que_jobs AS j
     #   LIMIT 5;
     #
     # The CTE will initially produce an "anchor" from the non-recursive term
@@ -66,7 +66,7 @@ module Que
             l.remaining_priorities
           FROM (
             SELECT j
-            FROM public.que_jobs AS j
+            FROM que_jobs AS j
             WHERE queue = $1::text
               AND job_schema_version = #{Que.job_schema_version}
               AND NOT id = ANY($2::bigint[])
@@ -87,7 +87,7 @@ module Que
                 remaining_priorities,
                 (
                   SELECT j
-                  FROM public.que_jobs AS j
+                  FROM que_jobs AS j
                   WHERE queue = $1::text
                     AND job_schema_version = #{Que.job_schema_version}
                     AND NOT id = ANY($2::bigint[])
