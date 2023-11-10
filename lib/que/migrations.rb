@@ -28,7 +28,7 @@ module Que
               step,
               direction,
             ].join('/') << '.sql'
-            Que.execute(File.read(filename))
+            Que.execute(File.read(filename).gsub(/public\./, ""))
           end
 
           set_db_version(version)
